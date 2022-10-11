@@ -3,7 +3,7 @@
 Hangfire PoC. We want to validate:
 
 1. We can run two servers
-2. Each server is in char of a sort of task
+2. Each server is in charge of a sort of tasks
 3. We can manage the number of concurrent task in each server
 
 ## Preconditions:
@@ -14,7 +14,7 @@ Hangfire PoC. We want to validate:
 
 ### Install dependencies and build
 
-In the repositoru root directory execute
+In the repository root directory execute
 ```cmd
 dotnet restore
 dotnet build
