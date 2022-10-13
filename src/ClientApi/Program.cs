@@ -1,5 +1,6 @@
 using Hangfire;
 using Hangfire.SqlServer;
+using SharedCode;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,15 +43,19 @@ app.MapGet("/", () => "This is the client api");
 app.MapPost("/Long", (int id, int duration) =>
 {
     Console.WriteLine($"Queuing long task with Id={id} and Duration={duration}");
-    BackgroundJob.Enqueue( () => SharedCode.LongTask.Execute(id, duration));
-    return Guid.NewGuid();
+    return BackgroundJob.Enqueue( () => SharedCode.LongTask.Execute(id, duration));
 }).WithName("QueueLong");
 
 app.MapPost("/Short", (int id) =>
 {
     Console.WriteLine($"Queuing short task with Id={id}");
-    BackgroundJob.Enqueue(() => SharedCode.ShortTask.Execute(id));
-    return Guid.NewGuid();
+    return BackgroundJob.Enqueue(() => ShortTask.Execute(id));
 }).WithName("QueueShort");
+
+app.MapPost("/Easy", () =>
+{
+    RecurringJob.AddOrUpdate("easyjob", () => EasyTask.Execute(), Cron.Minutely);
+    return "Easy recurring job queued";
+}).WithName("QueueEasy");
 
 app.Run();
